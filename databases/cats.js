@@ -1,9 +1,11 @@
-var mongoose = require("mongoose");
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
-mongoose.set('useUnifiedTopology', true);
-mongoose.connect( "mongodb://localhost/cat_app")
+
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/cat_app', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('Connected to DB!'))
+.catch(error => console.log(error.message));
 
 
 var catSchema = new mongoose.Schema({
@@ -12,14 +14,16 @@ var catSchema = new mongoose.Schema({
     temperament: String
 });
 
-var Cat = mongoose.model("Cat", catSchema);
+var Cat = mongoose.model("cat", catSchema);
 // ^ Cat will be created with a collection that is pluralized --> "cats"
 
 var George = new Cat({
-    name: "Filch",
-    age: 2,
-    temperament: "Mean"
+    name: "Floppy",
+    age: 12,
+    temperament: "Meaniepoo"
 });
+
+George.create();
 
 // George.save(function(err, cat){
 //     if (err){
@@ -34,12 +38,6 @@ var George = new Cat({
 
 // retrieve all cats from db
 
-Cat.find({}, function(err, cats){
-    if (err){
-        console.log("SOMETHIG WENT BAD");
-        console.log(err)
-    } else {
-        console.log("Cats! Lots of them!");
-        console.log(cats);
-    }
-})
+Cat.find({})
+.then(() => console.log(cats))
+.catch(err => console.log(err));
